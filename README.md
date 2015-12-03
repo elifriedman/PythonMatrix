@@ -3,7 +3,10 @@ An all python implementation of a matrix.
 
 # Usage
 
+You create a matrix by specifying the dimensions.
 ```python
+from mat import *
+
 # create a 2x3 matrix
 a = Mat(2,3)
 
@@ -11,20 +14,28 @@ a = Mat(2,3)
 for i in range(a.size(0)):
   for j in range(a.size(1)):
     a[i,j] = i+j
-print a
+```
 
+You can also specify an initial value for each of the elements.
+```python
 # create a 3x4 matrix and fill it with -2s
 b = Mat(3,4,-2)
-print b
+```
 
+Matrix-matrix multiplication is done using the `.dot()` method.
+```python
 # multiply
 c = a.dot(b)
-print c
+```
 
+Alternatively, you can do elemntwise or scalar multiplication using the `*` operator.
+```python
 # scalar multiplication
 a = 3*a
-print a
+```
 
+Here's a simple example showing the use of `Mat` to create a single layer neural network.
+```python
 # simple one layer neural network
 # 5 inputs, 10 hidden layers, 1 output, no bias terms
 from math import exp
@@ -32,6 +43,10 @@ import random
 def sigmoid(x):
   return 1.0/(1.0+exp(x))
 
+def sigmoidGrad(x):
+  s = sigmoid(x)
+  return s*(1.0-s)
+  
 class Layer:
   def __init__(self,num_in,num_out,activation=None):
     self.ni = num_in
@@ -47,8 +62,9 @@ class Layer:
       self.activation = activation
   
   def forward(X):
-    return self.activation(self.W.dot(X))
-
+    linear = self.W.dot(X)
+    return linear.applyfn(self.activation)
+    
 ni = 5
 nh = 10
 no = 1
@@ -59,5 +75,5 @@ Loh = Layer(nh,no)
 X = Mat(5,1,2)
 hidden = Lih.forward(X)
 output = Loh.forward(hidden)
-print output
 ```
+
